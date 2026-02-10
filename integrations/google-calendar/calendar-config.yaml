@@ -1,0 +1,36 @@
+# Google Calendar Configuration
+
+# Calendar mappings
+# Map reminder categories to specific calendars
+
+calendars:
+  # Primary personal calendar
+  primary:
+    id: "anne.leemans@gmail.com"
+    name: "Anne Leemans"
+  
+  # HU work calendar
+  hu:
+    id: "440eccce99f7826fa3523499a0f6f6f11f9479b0633539b98c78201b60b89b06@group.calendar.google.com"
+    name: "HU"
+
+# Category to calendar mapping
+category_mapping:
+  work: "hu"        # Work reminders → HU calendar
+  private: "primary"  # Private reminders → Primary calendar
+
+# Default settings
+defaults:
+  timezone: "Europe/Amsterdam"
+  
+  # Default reminder times (minutes before event)
+  reminders:
+    - 1440  # 1 day before
+    - 60    # 1 hour before
+  
+  # Color coding by priority
+  colors:
+    critical: "11"  # Red
+    high: "9"       # Blue
+    medium: "7"     # Peacock
+    low: "8"        # Gray

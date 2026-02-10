@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"chat.tools.terminal.autoApprove": {
+			"/^cd d:\\\\HogeschoolUtrecht\\\\GithubRepos\\\\ai-assist\\\\integrations\\\\google-calendar; python sync-reminders-to-calendar\\.py$/": {
+				"approve": true,
+				"matchCommandLine": true
+			},
+			"/^& D:/HogeschoolUtrecht/GithubRepos/ai-assist/\\.venv/Scripts/python\\.exe D:/HogeschoolUtrecht/GithubRepos/ai-assist/integrations/google-calendar/sync-reminders-to-calendar\\.py$/": {
+				"approve": true,
+				"matchCommandLine": true
+			}
+		}
+	}
+}

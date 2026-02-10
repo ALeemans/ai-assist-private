@@ -1,0 +1,27 @@
+# Joplin API Configuration
+
+# Joplin Web Clipper API endpoint (default when Joplin is running)
+api_url: "http://localhost:41184"
+
+# Authorization token (get from Joplin > Tools > Options > Web Clipper)
+# Set via environment variable JOPLIN_API_TOKEN for security
+# Or set directly here (not recommended): api_token: "your_token"
+api_token: null  # Will be read from environment variable
+
+# Notebook name where quick notes are captured on mobile
+inbox_notebook: "AI Assist Inbox"
+
+# Tag-based routing for automatic organization
+tag_mapping:
+  quick-thought: "inbox/"
+  work-note: "work/thoughts/"
+  private-note: "private/thoughts/"
+  work-reminder: "work/reminders/"
+  private-reminder: "private/reminders/"
+
+# After processing, what to do with imported notes?
+# Options: archive, delete, tag
+post_import_action: "archive"
+
+# Notebook name for archived notes (if post_import_action is "archive")
+archive_notebook: "Imported"

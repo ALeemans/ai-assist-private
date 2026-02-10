@@ -1,0 +1,29 @@
+# Google Calendar credentials
+integrations/google-calendar/credentials.json
+integrations/google-calendar/token.json
+
+# Outlook credentials
+integrations/outlook/token.json
+integrations/outlook/credentials.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Personal/sensitive
+*.secret
+*.private
+
+# IDE
+.vscode/settings.json
+.idea/
+integrations/anthropic/token.json

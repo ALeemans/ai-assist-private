@@ -1,0 +1,25 @@
+# Azure DevOps Configuration
+# Edit these values to match your organization and project setup
+
+devops:
+  organization: "https://dev.azure.com/HogeschoolUtrecht"
+  project: "DevOps DenA"
+  api_version: "7.1"
+
+# Default values for new user stories
+defaults:
+  feature_id: 145908  # Feature ID to link user stories to (set to null for no parent)
+  iteration_path: "DevOps DenA\\Data Analytics"
+  tag: "ME"
+  state: "Domeinteam Verzoek To Do"
+  assigned_to: "Anne Leemans"
+
+# Alternative configurations (uncomment to use)
+# You can add multiple profiles here for different projects/features
+# profiles:
+#   project_x:
+#     feature_id: 12345
+#     iteration_path: "Project X\\Sprint 1"
+#     tag: "ProjectX"
+#     state: "New"
+#     assigned_to: "Other Person"

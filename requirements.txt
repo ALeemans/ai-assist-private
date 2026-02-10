@@ -1,0 +1,17 @@
+# Python dependencies for AI-Assist
+
+# Core
+pyyaml>=6.0.1
+requests>=2.31.0
+
+# Azure DevOps integration
+azure-identity>=1.15.0
+
+# Microsoft Graph / Outlook integration
+msal>=1.26.0
+
+# Google Calendar integration
+google-auth>=2.26.0
+google-auth-oauthlib>=1.2.0
+google-auth-httplib2>=0.2.0
+google-api-python-client>=2.111.0
