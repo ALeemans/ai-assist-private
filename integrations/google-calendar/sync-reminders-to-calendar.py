@@ -6,10 +6,20 @@ Automatically routes work reminders to HU calendar and private to personal calen
 
 import argparse
 import yaml
+import sys
 from pathlib import Path
 from datetime import datetime, timedelta
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
+
+# Fix Windows console encoding for emoji support
+if sys.platform == 'win32':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except AttributeError:
+        # Python < 3.7
+        import codecs
+        sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
 
 SCRIPT_DIR = Path(__file__).parent
 REPO_ROOT = SCRIPT_DIR.parent.parent
@@ -20,7 +30,7 @@ SCOPES = ['https://www.googleapis.com/auth/calendar']
 def load_config():
     """Load calendar configuration"""
     if not CONFIG_FILE.exists():
-        print("⚠️  calendar-config.yaml not found, using defaults")
+        print("WARNING: calendar-config.yaml not found, using defaults")
         return None
     
     with open(CONFIG_FILE, 'r') as f:
@@ -42,7 +52,7 @@ def get_calendar_id_for_category(category, config):
 def get_calendar_service():
     """Get authenticated Google Calendar service"""
     if not TOKEN_FILE.exists():
-        print("❌ Not authenticated. Run setup-google-calendar.py first")
+        print("ERROR: Not authenticated. Run setup-google-calendar.py first")
         return None
     
     creds = Credentials.from_authorized_user_file(str(TOKEN_FILE), SCOPES)
@@ -103,14 +113,14 @@ def check_event_exists(service, calendar_id, title, due_date):
         
         events = events_result.get('items', [])
         
-        # Check if any event has the exact title we're looking for
+                # Check if any event has the exact title we're looking for
         for event in events:
             if event.get('summary') == f"📌 {title}":
                 return True
         
         return False
     except Exception as e:
-        print(f"⚠️  Error checking for existing event: {e}")
+        print(f"WARNING: Error checking for existing event: {e}")
         return False
 
 def create_calendar_event(service, reminder, config=None):
@@ -124,13 +134,13 @@ def create_calendar_event(service, reminder, config=None):
         config.get('category_mapping', {}).get(category, 'primary'), {}
     ).get('name', calendar_id) if config else calendar_id
     
-    # Get title from frontmatter or filename
+        # Get title from frontmatter or filename
     title = frontmatter.get('title', reminder['path'].stem.replace('-', ' ').title())
     
     # Get due date
     due_date = frontmatter.get('due')
     if not due_date:
-        print(f"⚠️  Skipping {reminder['path'].name} - no due date")
+        print(f"WARNING: Skipping {reminder['path'].name} - no due date")
         return None
     
     # Parse due date
@@ -140,12 +150,12 @@ def create_calendar_event(service, reminder, config=None):
         else:
             due_dt = datetime.combine(due_date, datetime.min.time())
     except:
-        print(f"⚠️  Skipping {reminder['path'].name} - invalid due date: {due_date}")
+        print(f"WARNING: Skipping {reminder['path'].name} - invalid due date: {due_date}")
         return None
     
     # Check if event already exists
     if check_event_exists(service, calendar_id, title, due_dt):
-        print(f"⏭️  Skipped '{title}' - already exists in calendar")
+        print(f"SKIPPED: '{title}' - already exists in calendar")
         return None
     
     # Get timezone from config
@@ -222,7 +232,7 @@ def create_calendar_event(service, reminder, config=None):
         'colorId': color_id,
     }
     
-    # Add tags
+        # Add tags
     tags = frontmatter.get('tags', [])
     if tags:
         event['description'] = f"Tags: {', '.join(tags)}\n\n{event['description']}"
@@ -230,10 +240,10 @@ def create_calendar_event(service, reminder, config=None):
     # Create event
     try:
         created_event = service.events().insert(calendarId=calendar_id, body=event).execute()
-        print(f"✅ Created event for '{title}' in {calendar_name}")
+        print(f"SUCCESS: Created event for '{title}' in {calendar_name}")
         return created_event
     except Exception as e:
-        print(f"❌ Error creating event: {e}")
+        print(f"ERROR: Error creating event: {e}")
         return None
 
 def main():
@@ -244,9 +254,9 @@ def main():
     parser.add_argument('--dry-run', action='store_true',
                        help='Show what would be synced without creating events')
     
-    args = parser.parse_args()
+        args = parser.parse_args()
     
-    print("📅 Sync Reminders to Google Calendar")
+    print("Sync Reminders to Google Calendar")
     print("=" * 50)
     print()
     
@@ -254,23 +264,23 @@ def main():
     config = load_config()
     
     if config:
-        print("📋 Calendar Mapping:")
+        print("Calendar Mapping:")
         for category, calendar_key in config.get('category_mapping', {}).items():
             calendar_name = config.get('calendars', {}).get(calendar_key, {}).get('name', calendar_key)
             print(f"   {category} → {calendar_name}")
         print()
     
-    # Get calendar service
+        # Get calendar service
     service = get_calendar_service()
     if not service:
         return
     
     # Get reminders
     reminders = get_reminders(args.category)
-    print(f"📋 Found {len(reminders)} pending reminder(s)\n")
+    print(f"Found {len(reminders)} pending reminder(s)\n")
     
     if not reminders:
-        print("📭 No pending reminders to sync")
+        print("No pending reminders to sync")
         return
     
     # Process each reminder
@@ -288,7 +298,7 @@ def main():
             config.get('category_mapping', {}).get(category, 'primary'), {}
         ).get('name', calendar_id) if config else calendar_id
         
-        print(f"{'[DRY RUN] ' if args.dry_run else ''}Creating: {title}")
+                print(f"{'[DRY RUN] ' if args.dry_run else ''}Creating: {title}")
         print(f"          Category: {category} → {calendar_name}")
         print(f"          Due: {due} | Priority: {priority}")
         
@@ -296,22 +306,22 @@ def main():
             event = create_calendar_event(service, reminder, config)
             if event:
                 created_count += 1
-                print(f"          ✅ Created: {event.get('htmlLink')}")
+                print(f"          Created: {event.get('htmlLink')}")
         
-        print()
+                print()
     
     if not args.dry_run:
-        print(f"🎉 Successfully created {created_count}/{len(reminders)} event(s)!")
+        print(f"SUCCESS: Created {created_count}/{len(reminders)} event(s)!")
     else:
-        print(f"🔍 Would create {len(reminders)} event(s)")
+        print(f"DRY RUN: Would create {len(reminders)} event(s)")
         print("\nRun without --dry-run to actually create events")
 
 if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
-        print("\n\n⚠️  Cancelled")
+        print("\n\nCancelled")
     except Exception as e:
-        print(f"\n❌ Error: {e}")
+        print(f"\nERROR: {e}")
         import traceback
         traceback.print_exc()
