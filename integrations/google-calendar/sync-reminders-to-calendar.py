@@ -254,7 +254,7 @@ def main():
     parser.add_argument('--dry-run', action='store_true',
                        help='Show what would be synced without creating events')
     
-        args = parser.parse_args()
+    args = parser.parse_args()
     
     print("Sync Reminders to Google Calendar")
     print("=" * 50)
@@ -298,7 +298,7 @@ def main():
             config.get('category_mapping', {}).get(category, 'primary'), {}
         ).get('name', calendar_id) if config else calendar_id
         
-                print(f"{'[DRY RUN] ' if args.dry_run else ''}Creating: {title}")
+        print(f"{'[DRY RUN] ' if args.dry_run else ''}Creating: {title}")
         print(f"          Category: {category} → {calendar_name}")
         print(f"          Due: {due} | Priority: {priority}")
         
